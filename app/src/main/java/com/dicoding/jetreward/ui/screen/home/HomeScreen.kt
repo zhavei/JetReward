@@ -1,5 +1,6 @@
 package com.dicoding.jetreward.ui.screen.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,7 +27,8 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(
         factory = ViewModelFactory(Injection.provideRepository())
-    )
+    ),
+    navigateToDetail: (Long) -> Unit,
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -44,7 +46,8 @@ fun HomeScreen(
             is UiState.Success -> {
                 HomeContent(
                     orderReward = uiState.data,
-                    modifier = modifier
+                    modifier = modifier,
+                    navigateToDetail = navigateToDetail
                 )
             }
             is UiState.Error -> {}
@@ -55,7 +58,8 @@ fun HomeScreen(
 @Composable
 fun HomeContent(
     orderReward: List<OrderReward>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToDetail: (Long) -> Unit
 ) {
 
     LazyVerticalGrid(
@@ -71,11 +75,11 @@ fun HomeContent(
             RewardItem(
                 image = data.reward.image,
                 title = data.reward.title,
-                requiredPoint = data.reward.requiredPoint
+                requiredPoint = data.reward.requiredPoint,
+                modifier = Modifier.clickable {
+                    navigateToDetail(data.reward.id)
+                }
             )
-
         }
-
     }
-
 }
